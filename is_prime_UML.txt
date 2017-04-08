@@ -1,0 +1,19 @@
+@startuml
+start
+if (number > 1) then (yes)
+  :i = 2;
+  while (i < number)
+    if (number % i == 0) then (yes)
+      :return True;
+      stop
+    else (no)
+      :i = i + 1;
+    endif
+  endwhile
+    :return False;
+else (no)
+  :return False;
+endif
+
+stop
+@enduml

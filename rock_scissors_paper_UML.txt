@@ -1,0 +1,27 @@
+@startuml
+start
+
+:import module random;
+
+while (True)
+   :User make choice;
+   partition select_winner() {
+     :Get random computer_choice;
+     : print(computer_choice);
+     :who_win = (User_choice - Computer_choice) % 3;
+     if (who_win == 0) then (True)
+       :print "draw";
+     elseif (who_win == 1) then (True)
+       :print "You won";
+     else (else)
+       :print "You lost";
+     endif
+   }
+     if (user input 'Y' or 'y') then (continue)
+     else (break)
+       stop
+     endif
+endwhile
+
+stop
+@enduml

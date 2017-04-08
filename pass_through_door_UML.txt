@@ -1,0 +1,17 @@
+@startuml
+start
+:input data;
+:remove max(box_dim);
+if (box_dim[0] <= min(w, h) OR box_dim[1] <= min(w, h)) then (yes)
+
+  if (box_dim[0] <= max(w, h) AND box_dim[1] <= max(w, h)) then (yes)
+    :print "box passes";
+    stop
+  else (no)
+  endif
+else (no)
+endif
+:print "box doesn't pass";
+
+stop
+@enduml
