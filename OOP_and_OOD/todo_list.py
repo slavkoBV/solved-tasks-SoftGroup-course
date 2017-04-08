@@ -5,6 +5,7 @@ import os
 from collections import OrderedDict
 
 
+# Model
 class Task:
     def __init__(self, content):
         self.content = content
@@ -28,10 +29,6 @@ class Task:
 
     def toggle_done(self):
         self.done = not self.done
-
-    def __repr__(self):
-        return 'Task: {0} - {1} - {2}'.format(self.content, 'DONE' if self.done else 'NOT DONE',
-                                              self.deadline)
 
     def __str__(self):
         return '{0} - {1} - {2}'.format(self.content, 'DONE' if self.done else 'NOT DONE',
@@ -64,29 +61,32 @@ class TodoList(list):
         elif attribute == 'p':
             self.tasks[index].set_task_priority(value)
 
-    def show_list(self):
-        """Show TODO list"""
-        if len(self.tasks) != 0:
-            print('{0:=^34}{1:^11}{2:=^35}'.format('=', 'TODO LIST', '='))
-            print('{0:=^80}'.format('='))
-            print('{0:^2}{1:^20}{2:^18}{3:^23}{4:^11}{5:^6}'.format('#', 'Task', 'Deadline', 'Comment', 'Priority',
-                                                                    'Done'))
-            print('{0:=^80}'.format('='))
-            for ind, task in enumerate(self.tasks):
-                print('{0:^2}{1:^20}{2:^18}{3:^23}{4:^10}{5:^7}'.format(ind, task.content, task.deadline,
-                                                                        task.comment, task.priority,
-                                                                        'True' if task.done else 'False'))
-            print('\n' + '=' * 80 + '\n')
-
-    def __repr__(self):
-        return 'TODO: {}'.format(self.tasks)
+    def __str__(self):
+        return '{}'.format(self.tasks)
 
 
+# View
 def clear():
     """Clear the display"""
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
+def show_list(alist):
+    """Show TODO list"""
+    if len(alist) != 0:
+        print('{0:=^34}{1:^11}{2:=^35}'.format('=', 'TODO LIST', '='))
+        print('{0:=^80}'.format('='))
+        print('{0:^2}{1:^20}{2:^18}{3:^23}{4:^11}{5:^6}'.format('#', 'Task', 'Deadline', 'Comment', 'Priority',
+                                                                'Done'))
+        print('{0:=^80}'.format('='))
+        for ind, task in enumerate(alist):
+            print('{0:^2}{1:^20}{2:^18}{3:^23}{4:^10}{5:^7}'.format(ind, task.content, task.deadline,
+                                                                    task.comment, task.priority,
+                                                                    'True' if task.done else 'False'))
+        print('\n' + '=' * 80 + '\n')
+
+
+# Controller
 def mainloop():
     """Explore task scheduler"""
     schedule = TodoList()
@@ -103,15 +103,13 @@ def mainloop():
         ('c', 'Comment task (up to 21 symbols)'),
         ('p', 'Set task priority (ex. 1 - 10)')
     ])
-
     choice = None
     while choice != 'q':
         clear()
-        schedule.show_list()
+        show_list(schedule.tasks)
         for key, value in menu.items():
             print('{} - {}'.format(key, value.__doc__))
         print('q - Quit')
-
         choice = input('\nMake choice: ')
         if choice in menu:
             if choice == 'm':
