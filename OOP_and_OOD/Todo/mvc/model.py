@@ -17,10 +17,13 @@ class Task:
 
     @deadline.setter
     def deadline(self, deadline):
-        if deadline:
-            date = datetime.strptime(deadline, '%Y-%m-%d')
-            if date >= self.date_create:
-                self._deadline = date
+        try:
+            date = datetime.strptime(deadline, '%Y-%m-%d %H:%M')
+        except ValueError:
+            deadline += ' 00:00'
+            date = datetime.strptime(deadline, '%Y-%m-%d %H:%M')
+        if date >= self.date_create:
+            self._deadline = date
 
     @property
     def priority(self):
@@ -28,7 +31,10 @@ class Task:
 
     @priority.setter
     def priority(self, priority):
-        self._priority = priority
+        if priority.isdigit() and 0 < int(priority) <= 10:
+            self._priority = priority
+        else:
+            pass
 
     def comment_task(self, comment):
         self.comment = comment
