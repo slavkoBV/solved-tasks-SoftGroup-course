@@ -73,11 +73,11 @@ class User:
         curs = conn.cursor()
         curs.execute("INSERT INTO users (username, password, \
                       first_name, last_name, email, phone ) VALUES (?, ?, ?, ?, ?, ?)", [self.username,
-                                                                     self.password,
-                                                                     self.first_name,
-                                                                     self.last_name,
-                                                                     self.email,
-                                                                     self.phone])
+                                                                                         self.password,
+                                                                                         self.first_name,
+                                                                                         self.last_name,
+                                                                                         self.email,
+                                                                                         self.phone])
         conn.commit()
         curs.close()
         conn.close()
@@ -123,3 +123,15 @@ class User:
         curs.close()
         conn.close()
         return users
+
+    def get_user_by_username(self, username, DB_FILE):
+        conn = sqlite3.connect(DB_FILE)
+        curs = conn.cursor()
+        curs.execute("SELECT * FROM users WHERE username='{}'".format(username))
+        user = curs.fetchone()
+        curs.close()
+        conn.close()
+        if user:
+            return user
+        else:
+            return None

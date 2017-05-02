@@ -10,8 +10,8 @@ routes = {
 
 
 class Application(object):
-    def __init__(self, routes):
-        self.routes = routes
+    def __init__(self, app_routes):
+        self.routes = app_routes
 
     @staticmethod
     def not_found(environ, start_fn):

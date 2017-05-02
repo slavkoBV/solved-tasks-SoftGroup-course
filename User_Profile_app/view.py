@@ -14,7 +14,7 @@ def home_handler(environ, start_response):
 
 
 def profile_handler(environ, start_response):
-    response = '<h1>Wrong user</h1>'.encode()
+    response = ''.encode()
     if environ['REQUEST_METHOD'] == 'POST':
         post_env = environ.copy()
         request = cgi.FieldStorage(
@@ -23,15 +23,33 @@ def profile_handler(environ, start_response):
             keep_blank_values=True)
         username = request['username'].value
         password = request['password'].value
-        all_users = User.get_all_users(DB_FILE)
-        if all_users:
-            for user in all_users:
-                if username in user:
-                    if server_auth(password, user[2]):
-                        action = '/update_profile'
-                        html = open('template.html', 'r').read().format(user[1], user[3], user[4], action, user[5], user[6])
-                        response = html.encode()
+        user_db = User().get_user_by_username(username, DB_FILE)
 
+        # Check if user exists
+        if user_db:
+            if server_auth(password, user_db[2]):
+                action = '/update_profile'
+                html = open('template.html', 'r').read().format(user_db[1], user_db[3],
+                                                                user_db[4], action, user_db[5], user_db[6])
+                response = html.encode()
+            else:
+                html = '<h1>Wrong password</h1'
+                response = html.encode()
+        else:
+            # If user does not exist, register new user by username and password
+            # later user can fill all fields of his profile
+            user = User()
+            try:
+                user.username = username
+                user.password = password
+                user.save(DB_FILE)
+                action = '/update_profile'
+                html = open('template.html', 'r').read().format(user.username, user.first_name,
+                                                                user.last_name, action, user.email, user.phone)
+
+            except ValueError as err:
+                html = '<h1>{}</h1>'.format(err)
+            response = html.encode()
     start_response('200 OK', [('Content-Type', 'text/html')])
     return [response]
 
