@@ -1,3 +1,5 @@
+import os.path
+
 from wsgiref.simple_server import make_server
 
 from User_Profile_app.handlers import home_handler, profile_handler, update_profile, delete
@@ -32,8 +34,11 @@ def server_run(application):
 
 
 if __name__ == '__main__':
-    # Create database
-    create_db(DB_FILE)
+    # Create database if it not exists
+    if not os.path.isfile(DB_FILE):
+        create_db(DB_FILE)
+    else:
+        print('file exists')
     app = Application(routes)
     # Run server
     server_run(app)
