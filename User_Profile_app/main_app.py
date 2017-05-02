@@ -1,11 +1,13 @@
 from wsgiref.simple_server import make_server
 
-from User_Profile_app.view import home_handler, profile_handler, update_profile
+from User_Profile_app.handlers import home_handler, profile_handler, update_profile, delete
+from User_Profile_app.utils import DB_FILE, create_db
 
 routes = {
     '/': home_handler,
     '/profile': profile_handler,
-    '/update_profile': update_profile
+    '/update_profile': update_profile,
+    '/delete': delete,
 }
 
 
@@ -29,5 +31,9 @@ def server_run(application):
     server.serve_forever()
 
 
-app = Application(routes)
-server_run(app)
+if __name__ == '__main__':
+    # Create database
+    create_db(DB_FILE)
+    app = Application(routes)
+    # Run server
+    server_run(app)

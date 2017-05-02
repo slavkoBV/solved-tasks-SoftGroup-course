@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <title>Update User Profile</title>
+    <title>User Profile</title>
 </head>
 <body>
     <h1 style="margin-left: 180px">User Profile</h1>
@@ -38,9 +38,12 @@
                 <input type="text" class="form-control" id="phone" name="phone" value="{5}">
             </div>
         </div>
-        <div style="margin-left: 180px">
+        <div class="form-actions" style="margin-left: 300px">
             <button type="submit" class="btn btn-default">Update</button>
+           <a style="margin-left: 20px;" href="http://127.0.0.1:8000/delete?{6}">Delete</a>
         </div>
+
     </form>
+    <p style="margin-left: 150px;"><a href="http://127.0.0.1:8000">Exit</a> </p>
 </body>
 </html>

@@ -68,8 +68,8 @@ class User:
     def phone(self, phone):
         self._phone = phone
 
-    def save(self, DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
+    def save(self, db_file):
+        conn = sqlite3.connect(db_file)
         curs = conn.cursor()
         curs.execute("INSERT INTO users (username, password, \
                       first_name, last_name, email, phone ) VALUES (?, ?, ?, ?, ?, ?)", [self.username,
@@ -82,50 +82,32 @@ class User:
         curs.close()
         conn.close()
 
-    def update(self, user_id):
-        conn = sqlite3.connect(DB_FILE)
+    def update(self, username, db_file):
+        conn = sqlite3.connect(db_file)
         curs = conn.cursor()
-        curs.execute("SELECT * FROM users WHERE id={}".format(user_id))
-        user = curs.fetchone()
-        user_id = user[0]
-        self._username = user[1]
-        self._password = user[2]
-        self._first_name = user[3]
-        self._last_name = user[4]
-        self._email = user[5]
-        self._phone = user[6]
-        curs.execute("UPDATE users SET username=?, password=?, first_name=?, last_name=?, email=?, phone=? \
-                    WHERE id=?", [self._username,
-                                  self._password,
-                                  self._first_name,
-                                  self._last_name,
-                                  self._email,
-                                  self._phone,
-                                  user_id])
-        conn.commit()
-        curs.close()
-        conn.close()
-
-    def delete(self, DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
-        curs = conn.cursor()
-        curs.execute("DELETE FROM users WHERE username='{}'".format(self.username))
+        curs.execute("UPDATE users SET username=?, first_name=?, last_name=?, email=?, phone=? \
+                    WHERE username=?", [self._username,
+                                        self.first_name,
+                                        self.last_name,
+                                        self.email,
+                                        self.phone,
+                                        username])
         conn.commit()
         curs.close()
         conn.close()
 
     @staticmethod
-    def get_all_users(DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
+    def delete(db_file, username):
+        conn = sqlite3.connect(db_file)
         curs = conn.cursor()
-        curs.execute("SELECT * FROM users")
-        users = curs.fetchall()
+        curs.execute("DELETE FROM users WHERE username='{}'".format(username))
+        conn.commit()
         curs.close()
         conn.close()
-        return users
 
-    def get_user_by_username(self, username, DB_FILE):
-        conn = sqlite3.connect(DB_FILE)
+    @staticmethod
+    def get_user_by_username(username, db_file):
+        conn = sqlite3.connect(db_file)
         curs = conn.cursor()
         curs.execute("SELECT * FROM users WHERE username='{}'".format(username))
         user = curs.fetchone()
